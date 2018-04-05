@@ -5,9 +5,9 @@ class Earth extends Component {
   constructor(props) {
     super(props)
 
-    this.start = this.start.bind(this)
-    this.stop = this.stop.bind(this)
-    this.animate = this.animate.bind(this)
+    this.start = this.start.bind(this);
+    this.stop = this.stop.bind(this);
+    this.animate = this.animate.bind(this);
 
     this.mouseX = 0;
     this.mouseY = 0;
@@ -15,8 +15,9 @@ class Earth extends Component {
 
   componentDidMount() {
 
+
     //Scene
-    const scene = new THREE.Scene()
+    const scene = new THREE.Scene();
 
     //Camera
     const camera = new THREE.PerspectiveCamera(
@@ -25,41 +26,47 @@ class Earth extends Component {
       0.1,
       1000
     );
-    camera.position.z = 20;
-    camera.position.y = 2;
+    camera.position.z = 15;
+    camera.position.y = 3;
     camera.lookAt( scene.position );
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setClearColor('#ffffff');
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setClearColor( 0xffffff, 0);
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(2);
 
     //Earth
     let planetTexture = this.props.planetTexture;
-    const geometry = new THREE.SphereGeometry( 5, 32, 32 );
+    const geometry = new THREE.SphereGeometry( 5, 62, 62 );
     const texture = new THREE.TextureLoader().load(planetTexture);
     const material = new THREE.MeshPhongMaterial({
       color: 0xffffff,
       map: texture,
-      shininess: 0
+      shininess: 10
     });
-    const mesh = new THREE.Mesh(geometry, material)
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.rotation.y = -1.199;
     scene.add(mesh)
 
 
     //Light
-    const ambientLight = new THREE.AmbientLight(0x222222);
+    const ambientLight = new THREE.AmbientLight(0x404040, 3.5);
     scene.add(ambientLight);
 
-    const directionLightWhite	= new THREE.DirectionalLight( 0xffffff, 1 );
-    directionLightWhite.position.set(0,0,5);
+    let directionLightWhite	= new THREE.PointLight( 0xffffff, 0.9, 100 );
+    directionLightWhite.position.set(-8,15,25);
     scene.add( directionLightWhite );
 
-    const directionLight1 = new THREE.DirectionalLight( 0xff24b7, 3.5 );
-    directionLight1.position.set( 10, -1, -7);
-    scene.add( directionLight1 );
+    let directionLight2	= new THREE.PointLight( 0xAB1C7D, 8, 160 );
+    directionLight2.position.set(100, -60, -50);
+    scene.add( directionLight2 );
 
-    const directionLight2 = new THREE.DirectionalLight( 0xff24b7, 3.5 );
-    directionLight2.position.set( 5, -10, -7);
+    directionLight2	= new THREE.PointLight( 0xAB1C7D, 9, 200 );
+    directionLight2.position.set(100, -140, -50);
+    scene.add( directionLight2 );
+
+    directionLight2	= new THREE.PointLight( 0xAB1C7D, 9, 200 );
+    directionLight2.position.set(170, 20, -50);
     scene.add( directionLight2 );
 
     this.scene = scene;
@@ -72,6 +79,8 @@ class Earth extends Component {
     window.addEventListener( 'resize', this.handleWindowResize.bind(this));
 
     this.mount.appendChild(this.renderer.domElement);
+    console.log(this.mount);
+    console.log(window.innerHeight);
     this.start()
   }
 
@@ -92,8 +101,8 @@ class Earth extends Component {
   }
 
   animate() {
-    this.mesh.rotation.y = (this.mouseX-1000) * 0.001;
-    this.mesh.rotation.x = (this.mouseY) * 0.0005;
+    this.mesh.rotation.y += 0.05 * ((this.mouseX-1200) * 0.001 - this.mesh.rotation.y);
+    this.mesh.rotation.x += 0.05 * ((this.mouseY) * 0.001 - this.mesh.rotation.x);
 
     this.renderScene()
     this.frameId = window.requestAnimationFrame(this.animate)
