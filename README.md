@@ -25,6 +25,7 @@ Default canvas size is full screen.
 renderer.setSize(window.innerWidth, window.innerHeight);
 camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight, 0.1, 1000);
 
+//Always position the object in the middle
 handleWindowResize(event){
     console.log(this);
     this.camera.aspect = window.innerWidth / window.innerHeight;
