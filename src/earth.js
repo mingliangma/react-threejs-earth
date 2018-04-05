@@ -45,29 +45,32 @@ class Earth extends Component {
       shininess: 10
     });
     const mesh = new THREE.Mesh(geometry, material);
+    //set earth to face Atlantic Ocean
     mesh.rotation.y = -1.199;
-    scene.add(mesh)
+    scene.add(mesh);
 
 
-    //Light
+    //Lights
     const ambientLight = new THREE.AmbientLight(0x404040, 3.5);
     scene.add(ambientLight);
 
-    let directionLightWhite	= new THREE.PointLight( 0xffffff, 0.9, 100 );
-    directionLightWhite.position.set(-8,15,25);
-    scene.add( directionLightWhite );
+    //white light with reflective effect
+    let pointLightWhite	= new THREE.PointLight( 0xffffff, 0.9, 100 );
+    pointLightWhite.position.set(-8,15,25);
+    scene.add( pointLightWhite );
 
-    let directionLight2	= new THREE.PointLight( 0xAB1C7D, 8, 160 );
-    directionLight2.position.set(100, -60, -50);
-    scene.add( directionLight2 );
+    // 3 point-light sources from the right side.
+    let pointLightPinkMid	= new THREE.PointLight( 0xAB1C7D, 8, 160 );
+    pointLightPinkMid.position.set(100, -60, -50);
+    scene.add( pointLightPinkMid );
 
-    directionLight2	= new THREE.PointLight( 0xAB1C7D, 9, 200 );
-    directionLight2.position.set(100, -140, -50);
-    scene.add( directionLight2 );
+    let pointLightPinkBottom	= new THREE.PointLight( 0xAB1C7D, 9, 200 );
+    pointLightPinkBottom.position.set(100, -140, -50);
+    scene.add( pointLightPinkBottom );
 
-    directionLight2	= new THREE.PointLight( 0xAB1C7D, 9, 200 );
-    directionLight2.position.set(170, 20, -50);
-    scene.add( directionLight2 );
+    let pointLightPinkTop	= new THREE.PointLight( 0xAB1C7D, 9, 200 );
+    pointLightPinkTop.position.set(170, 20, -50);
+    scene.add( pointLightPinkTop );
 
     this.scene = scene;
     this.camera = camera;
@@ -79,13 +82,10 @@ class Earth extends Component {
     window.addEventListener( 'resize', this.handleWindowResize.bind(this));
 
     this.mount.appendChild(this.renderer.domElement);
-    console.log(this.mount);
-    console.log(window.innerHeight);
     this.start()
   }
 
   componentWillUnmount() {
-    console.log('componentWillUnmount');
     this.stop();
     this.mount.removeChild(this.renderer.domElement);
   }
@@ -101,6 +101,8 @@ class Earth extends Component {
   }
 
   animate() {
+
+    //rotation effect
     this.mesh.rotation.y += 0.05 * ((this.mouseX-1200) * 0.001 - this.mesh.rotation.y);
     this.mesh.rotation.x += 0.05 * ((this.mouseY) * 0.001 - this.mesh.rotation.x);
 
@@ -117,8 +119,7 @@ class Earth extends Component {
     this.mouseY = ( event.clientY - window.innerHeight/2 );
   }
 
-  handleWindowResize(event){
-    console.log(this);
+  handleWindowResize(){
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
 
